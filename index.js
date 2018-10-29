@@ -85,8 +85,34 @@ controller.on('bot_channel_join', function (bot, message) {
     bot.reply(message, "I'm here!")
 });
 
-controller.hears('hello', 'direct_message', function (bot, message) {
-    bot.reply(message, 'Hello!');
+controller.hears(
+    ['hello', 'hi', 'greetings'],
+    ['direct_mention', 'mention', 'direct_message'],
+    function(bot,message) {
+        bot.reply(message,'Hello!');
+    }
+);
+
+controller.hears(
+  ['weather'],
+  ['direct_mention', 'mention', 'direct_message'],
+  (bot, message) => bot.reply(message, "The weather looks nice today."),
+);
+
+// Log every message received
+controller.middleware.receive.use(function(bot, message, next) {
+
+  // log it
+  if (message.type === "message") {
+    console.log(message.text);
+  }
+
+  // modify the message
+  message.logged = true;
+
+  // continue processing the message
+  next();
+
 });
 
 
